@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  nginx_demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simple-nginx-demo
+    ports:
+      - "8080:80"

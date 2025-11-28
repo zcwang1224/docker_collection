@@ -4,7 +4,7 @@
 
 ### Build Image
 
-```sbashh
+```bash
 docker build -t my-fastapi-test
 ```
 
