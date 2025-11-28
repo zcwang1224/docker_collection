@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  bridge_pc_1:
+    image: busybox
+    container_name: bridge_pc_1
+    networks:
+      - my_bridge
+    command: ["sleep", "infinity"]
+  bridge_pc_2:
+    image: busybox
+    container_name: bridge_pc_2
+    networks:
+      - my_bridge
+    command: ["sleep", "infinity"]
+
+  host_pc_1:
+    image: busybox
+    container_name: host_pc_1
+    networks:
+      - host
+    command: ["sleep", "infinity"]    
+
+networks:
+  my_bridge:
+    driver: bridge
+  host:

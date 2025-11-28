@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  pc:
+    image: busybox
+    networks:
+      - web
+    command: ["sleep", "infinity"]
+  nginx:
+    image: busybox
+    networks:
+      - web
+      - backend
+    command: ["sleep", "infinity"]      
+  api:
+    image: busybox
+    networks:
+      - backend
+    command: ["sleep", "infinity"]      
+  db:
+    image: busybox
+    networks:
+      - backend
+    command: ["sleep", "infinity"]
+
+networks:
+  web:
+  backend:
+    
