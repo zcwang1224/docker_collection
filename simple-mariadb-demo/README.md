@@ -1,4 +1,4 @@
-# Simple Mysql Service Demo
+# Simple MariaDB Service Demo
 
 # Compose
 ```bash
