@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  server_db:
+    build:
+      context: .
+      dockerfile: DbDockerfile
+    container_name: server_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      - MARIADB_USER=root
+      - MARIADB_PASSWORD=123456
+      - MARIADB_DATABASE=ycn_acs
+      - MARIADB_ROOT_PASSWORD=123456
+    networks:
+      - server-bridge-network
+
+  server_redis:
+    image: redis
+    container_name: server_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - server-bridge-network
+
+  server_api:
+    build:
+      context: .
+      dockerfile: ApiDockerfile
+    container_name: server_api
+    ports:
+      - "8888:8087"
+    networks:
+      - server-bridge-network
+    volumes:
+      - ./code:/app
+    depends_on:
+      - server_redis
+      - server_db
+
+networks:
+  server-bridge-network:
+    driver: bridge
+  server-overlay-network:
+    driver: overlay

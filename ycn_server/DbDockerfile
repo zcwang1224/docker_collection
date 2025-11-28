@@ -1,0 +1,26 @@
+# 建置階段
+FROM python:3.10.12 AS build_stage
+
+WORKDIR /app
+
+COPY ./code .
+
+# 更新pip
+RUN python3 -m pip install --upgrade pip
+
+# 安裝Python套件
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
+
+# 執行Alembic指定，產生資料庫建置檔案init.sql
+RUN cd ./database/rdbms/main && alembic upgrade head --sql > /app/init.sql
+
+FROM mariadb:10.6
+
+# 將資料庫建置檔案init.sql，放至/docker-entrypoint-initdb.d/，mariadb第一次執行時會自動執行目錄內的sql檔案
+# docker-entrypoint-initdb.d
+#   1. 僅在首次啟動時執行：這些腳本只會在數據庫不存在時執行。
+#      如果容器已經存在並且數據庫已經初始化，這些腳本不會再次運行。
+#   2. 文件名的執行順序：文件會根據字母順序執行，因此你可以通過命名來控制執行的順序（例如，01-setup.sql 會在 02-insert.sql 之前執行）。
+COPY --from=build_stage /app/init.sql /docker-entrypoint-initdb.d/
+
+

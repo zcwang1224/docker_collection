@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  server_db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simple_mysql_demo
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=123
+      - MYSQL_DATABASE=test_db
+    
