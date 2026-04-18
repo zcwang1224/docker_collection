@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  dotnet-dev:
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./project:/app  # 將當前目錄掛載到容器的 /app
+    ports:
+      - "5000:5234" # 映射 API 埠號
+    environment:
+      - DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER=true
+      - ASPNETCORE_ENVIRONMENT=Development

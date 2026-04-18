@@ -1,0 +1,64 @@
+services:
+  # MariaDB 資料庫服務
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_server
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password  # 請更改你的 Root 密碼
+      MARIADB_DATABASE: my_database        # 初始建立的資料庫名稱
+      MARIADB_USER: user                   # 初始建立的使用者
+      MARIADB_PASSWORD: user_password      # 使用者密碼
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+      - backend_network
+
+  # Redis 快取服務
+  redis:
+    image: redis:alpine
+    container_name: redis_server
+    restart: always
+      #command: redis-server --appendonly yes # 啟用 AOF 持久化
+    ports:
+      - "6379:6379"
+        #volumes:
+        #  - redis_data:/data
+    networks:
+      - backend_network
+
+  # MariaDB Web UI
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    container_name: phpmyadmin-db-console
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  # Redis Web UI
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    networks:
+      - backend_network
+    depends_on:
+      - redis
+
+
+
+
+# 定義持久化儲存卷
+#volumes:
+#  mariadb_data:
+#  redis_data:
+
+# 定義內部網路
+networks:
+  backend_network:
+    driver: bridge
